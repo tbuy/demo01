@@ -1,11 +1,11 @@
 <template>
   <div class="item">
-    <div class="title" :style="{backgroundColor:itemData.bg}">
-      <span :style="{color: itemData.color}">{{itemData.title}}</span>
+    <div class="title" :style="{backgroundColor:item.bg}">
+      <span :style="{color: item.color}">{{item.title}}</span>
       <i class="iconfont icon-add" @click="add(index)"></i>
     </div>
     <div class="content" v-for="i in [1,1,1,1]">
-      <i class="iconfont icon-circle1" :style="{color: itemData.color}"></i>
+      <i class="iconfont icon-circle1" :style="{color: item.color}"></i>
       <span>完成</span>
       <span class="time">08/03 10:00</span>
     </div>
@@ -15,9 +15,11 @@
 <script>
 export default {
   props:{
-    itemData:{
-      type: Array,
-      default: []
+    item:{
+      type: Object,
+      default: function(){
+        return {}
+      }
     },
     index:{
       type:Number,
@@ -30,7 +32,8 @@ export default {
   },
   methods:{
     add: function(index){
-      console.log(index);
+      console.log(index)
+       this.$router.push('/detail');
     }
   }
 }
@@ -47,6 +50,7 @@ export default {
   .title span{
     font-size: 20px;
     color:red;
+    vertical-align: middle;
   }
   .title i{
     font-size: 20px!important;
@@ -65,6 +69,9 @@ export default {
   .content i {
     font-size: 24px;
     margin-left: 10px;
+    vertical-align: middle;
+  }
+  .content span{
     vertical-align: middle;
   }
   .content .time{
