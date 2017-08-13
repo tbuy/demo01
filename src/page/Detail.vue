@@ -1,23 +1,25 @@
 <template>
   <div class="detail">
     <div class="submit">
-      <div class="save">保存</div>
-      <div class="cancel">取消</div>
+      <div class="save" @click="save">保存</div>
+      <div class="cancel" @click="cancel">取消</div>
     </div>
     <div class="content">
       <textarea placeholder="任意内容" v-model="msg"></textarea>
     </div>
     <div class="radio">
-      <div v-for="item in [1,1,1,1]">
-        <i class="iconfont icon-circle1"></i>
-        <span>很重要-很紧急</span>
+      <div class="selection" v-for="item in itemData">
+        <i class="iconfont icon-circle1" :style="{color: item.color}" @click="selectItem(item)"></i>
+        <i class="iconfont icon-circle" :style="{color: item.color}" v-show="item.selected"></i>
+        <span>{{item.selected?item.title:""}}</span>
       </div>
     </div>
     <div class="time">
         <i class="iconfont icon-time"></i>
-        <span>2017-08-04 13:00</span>
+        <span>{{startTime}}</span>
         <i class="iconfont icon-enter"></i>
-        <span>2017-08-04 14:00</span>
+        <span>{{endTime}}</span>
+
     </div> 
   </div>
 </template>
@@ -26,11 +28,69 @@
 export default {
   data(){
     return {
-      msg:''
+      itemData:[{
+        title: "很重要-很要紧",
+        color: "#EF6A34",
+        id:1,
+        selected: false
+      },{
+        title: "重要-不要紧",
+        color: "#F6B55A",
+        id:2,
+        selected: false
+      },{
+        title: "不重要-紧急",
+        color: "#1DAFED",
+        id:3,
+        selected: false
+      },{
+        title: "不重要-不紧急",
+        color: "#90C744",
+        id:4,
+        selected: false
+      }],
+      msg:'',
+      selectId: 1,
+      startTime:'2017-08-04 14:00',
+      endTime:"2017-08-16 15:00"
     }
   },
   components:{
   },
+  methods:{
+    selectItem: function(item){
+      this.itemData.map(data=>{
+        data.selected = false;  
+        return data;
+      });
+      item.selected = true;
+      this.selectId = item.id;
+    },
+    cancel:function(){
+      this.$router.go(-1);
+    },
+    save:function(){
+      if(!this.msg || !this.endTime){
+        return false;
+      }
+
+      var _saveData = JSON.parse(localStorage.getItem('saveData')) || [];
+      _saveData.push({msg: this.msg, endTime: this.endTime, id: this.selectId});
+    
+      localStorage.setItem("saveData",JSON.stringify(_saveData));
+      this.$router.go(-1);
+    }
+  },
+  mounted:function(){
+    this.itemData.map(item=>{
+      if(item.id == this.$route.query.id){
+        item.selected = true;
+        this.selectId = item.id;
+      }
+      return item;
+    })
+     
+  }
 }
 </script>
 
@@ -69,19 +129,21 @@ export default {
   border-bottom: 1px solid #ccc;
   overflow: hidden;
 }
-.radio div{
+.radio .selection{
+  position: relative;
   float: left;
    margin-right: 10px;
 }
-.radio span {
-  font-size: 16px;
-  vertical-align: middle;
-}
-.radio i {
+.selection i{
+  position: absolute;
   font-size: 20px;
   cursor: pointer;
-  vertical-align: middle;
 }
+.selection span {
+  font-size: 16px;
+  margin-left: 30px;
+}
+
 .time {
   width: 100%;
   height: 50px;

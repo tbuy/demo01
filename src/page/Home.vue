@@ -14,19 +14,23 @@ export default {
       itemData:[{
         title: "很重要-很要紧",
         bg: "#FFEDE7",
-        color: "#EF6A34"
+        color: "#EF6A34",
+        id:1
       },{
         title: "重要-不要紧",
         bg: "#FFEFCB",
-        color: "#F6B55A"
+        color: "#F6B55A",
+        id:2
       },{
         title: "不重要-紧急",
         bg: "#D6F4FE",
-        color: "#1DAFED"
+        color: "#1DAFED",
+        id:3
       },{
         title: "不重要-不紧急",
         bg: "#EEFFDD",
-        color: "#90C744"
+        color: "#90C744",
+        id:4
       }]
     }
   },

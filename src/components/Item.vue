@@ -2,12 +2,14 @@
   <div class="item">
     <div class="title" :style="{backgroundColor:item.bg}">
       <span :style="{color: item.color}">{{item.title}}</span>
-      <i class="iconfont icon-add" @click="add(index)"></i>
+      <i class="iconfont icon-add" @click="add(item.id)"></i>
     </div>
-    <div class="content" v-for="i in [1,1,1,1]">
-      <i class="iconfont icon-circle1" :style="{color: item.color}"></i>
-      <span>完成</span>
-      <span class="time">08/03 10:00</span>
+    <div class="wrap">
+      <div class="content" v-for="i in listData">
+        <i class="iconfont icon-circle1" :style="{color: item.color}"></i>
+        <span class="msg">{{i.msg}}</span>
+        <span class="time">{{i.endTime | time}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -28,18 +30,32 @@ export default {
   },
   data () {
     return {
+      listData:[],
+    }
+  },
+  filters:{
+    time:function(value){
+      return value.slice(5,16);
     }
   },
   methods:{
-    add: function(index){
-      console.log(index)
-       this.$router.push('/detail');
+    add: function(id){
+       this.$router.push({path: '/detail',query:{id:id}});
     }
+  },
+  mounted: function(){
+    var _listData = JSON.parse(localStorage.getItem('saveData'))||[];
+    _listData.forEach(value=>{
+      if(value.id == this.item.id){
+        this.listData.push(value);
+      }
+    })
   }
 }
 </script>
 
 <style scoped>
+
   .title{
     height: 50px;
     line-height: 50px;
@@ -57,6 +73,11 @@ export default {
     vertical-align: middle;
     color: #999;
     float: right;
+  }
+  .wrap{
+    height: 240px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .content {
     font-size: 16px;
@@ -78,5 +99,11 @@ export default {
     float: right;
     color: red;
     margin-right: 10px;
+  }
+    .content .msg{
+    display: inline-block;
+    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
